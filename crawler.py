@@ -228,30 +228,15 @@ def send_email(main: list):
         log_file.close()
 
 def execute():
-    try:
-        driver = webdriver.Chrome(options=options)
-        driver.get('https://cloud.lambdalabs.com/login')
 
-        driver.implicitly_wait(2)
-    except Exception as e:
-        manage_error(None, str(e), send=True)
-        return 0
-    try:
-        login(driver)
-    except Exception as e:
-        manage_error(driver, str(e), send=True)
-        return 0
-    try:
-        main, send = gpu_availability_check(driver)
-    except Exception as e:
-        manage_error(driver, str(e), send=True)
-        return 0
-    try:
-        if send:
-            send_email(main)
-    except Exception as e:
-        manage_error(driver, str(e))
-        return 0
+    driver = webdriver.Chrome(options=options)
+    driver.get('https://cloud.lambdalabs.com/login')
+    driver.implicitly_wait(2)
+
+    login(driver)
+    main, send = gpu_availability_check(driver)
+    if send:
+        send_email(main)
     driver.close()
 
 
